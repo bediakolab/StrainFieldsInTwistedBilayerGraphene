@@ -1,0 +1,5 @@
+param n := 10;
+
+param m := 5;
+
+param m_actives := 2;

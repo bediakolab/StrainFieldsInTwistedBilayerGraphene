@@ -1,0 +1,164 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>phase_unwrap_TV_min</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-11-09"><meta name="DC.source" content="phase_unwrap_TV_min.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1"><b>Function of phase-unwrapping by using TV (Total Variation) minimization algorithm.[1][2]</b></a></li><li><a href="#3">1st-mode unwrapped_phase</a></li><li><a href="#4">Calculating rest mode</a></li><li><a href="#6">Reference</a></li></ul></div><h2><b>Function of phase-unwrapping by using TV (Total Variation) minimization algorithm.[1][2]</b><a name="1"></a></h2><p>Called functions explicitlly shown in this function body: denoised_unwrap, phase_wrap.</p><p>Called functions in whole function execution: denoised_unwrap, phase_wrap, TV_min.</p><p><i><b>How to use</b></i></p><p>a) unwrapped_phase = phase_unwrap_TV_min(wrapped_phase,'yes'): final residual wrapped phase is added so HN (High Noise) originally shown in wrapped_phase is clearly distinguishable on output unwrapped phase. Sometimes, there are still 2*pi jumps on output but these jumps are easily dealt with simple unwrap method such as unwrap command in Matlab.</p><p>b) unwrapped_phase = phase_unwrap_TV_min(wrapped_phase,'no'): final residual wrapped phase is not added so HN and possible 2*pi jumps on ouput are blurry.</p><pre class="codeinput"><span class="keyword">function</span> unwrapped_phase = phase_unwrap_TV_min(wrapped_phase,residue_add_check)
+</pre><pre class="codeinput">[m, n] = size(wrapped_phase); N_c = round(numel(wrapped_phase)*0.001);
+</pre><pre class="codeoutput error">&#45796;&#51020; &#49324;&#50857; &#51473; &#50724;&#47448;&#44032; &#48156;&#49373;&#54632;: phase_unwrap_TV_min (line 19)
+&#51077;&#47141; &#51064;&#49688;&#44032; &#48512;&#51313;&#54633;&#45768;&#45796;.
+</pre><h2>1st-mode unwrapped_phase<a name="3"></a></h2><pre class="codeinput">unwrapped_phase_1st_mode = denoised_unwrap(wrapped_phase);
+</pre><h2>Calculating rest mode<a name="4"></a></h2><pre class="codeinput">unwrapped_phase = unwrapped_phase_1st_mode;
+number_of_iteration = 0;
+<span class="keyword">while</span>(1)
+    phase_r = phase_wrap(wrapped_phase - unwrapped_phase); <span class="comment">% Residual wrapped phase.</span>
+    <span class="comment">% Counting numer of phase jump present in residual wrapped phase</span>
+    N = 0;
+    <span class="keyword">for</span> i = 1 : m
+        <span class="keyword">for</span> j = 1 : n
+            <span class="keyword">if</span> (abs(phase_r(i,j)) &gt;= 2*pi)
+                N = N + 1;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> (N &lt; N_c)
+        <span class="keyword">if</span> (strcmp(residue_add_check,<span class="string">'yes'</span>) == 1)
+            unwrapped_phase = unwrapped_phase + phase_r; <span class="comment">% Eq.(11) of Ref.[1].</span>
+            <span class="keyword">break</span>;
+        <span class="keyword">else</span>
+            <span class="comment">%Experience tells HN (High Noise) becomes blurry when final</span>
+            <span class="comment">%residual wrapped phase is not added to output.</span>
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        unwrapped_phase = unwrapped_phase + denoised_unwrap(phase_r);
+    <span class="keyword">end</span>
+    number_of_iteration = number_of_iteration + 1;
+    <span class="keyword">if</span> (number_of_iteration &gt; 500)
+        <span class="keyword">break</span>;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>Reference<a name="6"></a></h2><div><ol><li>H. Y. H. Huang, L. Tian, Z. Zhang, Y. Liu, Z. Chen, and G. Barbastathis, &#8220;Path-independent phase unwrapping using phase gradient and total-variation (TV) denoising,&#8221; Opt. Express, vol. 20, no. 13, p. 14075, Jun. 2012.</li><li>ANTONIN CHAMBOLLE, &#8220;An Algorithm for Total Variation Minimization and Applications,&#8221; J. Math. Imaging Vis., vol. 20, no. 1/2, pp. 89?97, Jan. 2004.</li></ol></div><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% *Function of phase-unwrapping by using TV (Total Variation) minimization algorithm.[1][2]*
+% Called functions explicitlly shown in this function body: denoised_unwrap, phase_wrap.
+%
+% Called functions in whole function execution: denoised_unwrap, phase_wrap, TV_min.
+%
+% _*How to use*_ 
+%
+% a) unwrapped_phase =
+% phase_unwrap_TV_min(wrapped_phase,'yes'): final residual wrapped phase is
+% added so HN (High Noise) originally shown in wrapped_phase is clearly distinguishable on output unwrapped
+% phase. Sometimes, there are still 2*pi jumps on output but these jumps
+% are easily dealt with simple unwrap method such as unwrap command in
+% Matlab.
+%
+% b) unwrapped_phase =
+% phase_unwrap_TV_min(wrapped_phase,'no'): final residual wrapped phase is
+% not added so HN and possible 2*pi jumps on ouput are blurry.
+function unwrapped_phase = phase_unwrap_TV_min(wrapped_phase,residue_add_check)
+[m, n] = size(wrapped_phase); N_c = round(numel(wrapped_phase)*0.001);
+%% 1st-mode unwrapped_phase
+unwrapped_phase_1st_mode = denoised_unwrap(wrapped_phase);
+%% Calculating rest mode
+unwrapped_phase = unwrapped_phase_1st_mode;
+number_of_iteration = 0;
+while(1)
+    phase_r = phase_wrap(wrapped_phase - unwrapped_phase); % Residual wrapped phase.
+    % Counting numer of phase jump present in residual wrapped phase
+    N = 0;
+    for i = 1 : m
+        for j = 1 : n
+            if (abs(phase_r(i,j)) >= 2*pi)
+                N = N + 1;
+            end
+        end
+    end
+    if (N < N_c)
+        if (strcmp(residue_add_check,'yes') == 1)
+            unwrapped_phase = unwrapped_phase + phase_r; % Eq.(11) of Ref.[1].
+            break;
+        else
+            %Experience tells HN (High Noise) becomes blurry when final
+            %residual wrapped phase is not added to output.
+            break; 
+        end
+    else
+        unwrapped_phase = unwrapped_phase + denoised_unwrap(phase_r);
+    end
+    number_of_iteration = number_of_iteration + 1;
+    if (number_of_iteration > 500)
+        break;
+    end
+end
+end
+%% Reference
+% # H. Y. H. Huang, L. Tian, Z. Zhang, Y. Liu, Z. Chen, and G. Barbastathis, “Path-independent phase unwrapping using phase gradient and total-variation (TV) denoising,” Opt. Express, vol. 20, no. 13, p. 14075, Jun. 2012.
+% # ANTONIN CHAMBOLLE, “An Algorithm for Total Variation Minimization and Applications,” J. Math. Imaging Vis., vol. 20, no. 1/2, pp. 89?97, Jan. 2004.
+##### SOURCE END #####
+--></body></html>

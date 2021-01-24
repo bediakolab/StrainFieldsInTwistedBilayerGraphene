@@ -1,2 +1,2 @@
-# StrainFieldsInTwistedBilayerGraphene
-Data analysis code used in the paper "Strain Fields in Twisted Bilayer Graphene"
+# matlab4DSTEM
+Matlab scripts and functions for the analysis of 4DSTEM electron microscopy data.
